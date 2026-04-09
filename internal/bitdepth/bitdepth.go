@@ -25,3 +25,18 @@ func ConvertFloat32LittleEndianToSigned16LittleEndian(in []float32, out []byte, 
 
 	return nil
 }
+
+// ConvertSigned16LittleEndianToFloat32LittleEndian converts s16le to f32le.
+func ConvertSigned16LittleEndianToFloat32LittleEndian(in []byte, out []float32) error {
+	for i := 0; i < len(out); i++ {
+		byteIndex := i * 2
+		if byteIndex+1 >= len(in) {
+			break
+		}
+		// Read little-endian int16
+		sample := int16(in[byteIndex]) | (int16(in[byteIndex+1]) << 8)
+		// Convert to float32 in range [-1, 1]
+		out[i] = float32(sample) / 32768.0
+	}
+	return nil
+}
